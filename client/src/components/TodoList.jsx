@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import TodoListItem from "./TodoListItem";
- 
+import AddNewTaskModal from "./AddNewTaskModal";
 
 export default function TodoList( ) {
 
     const[todos, setTodos] = useState([]);
     const [isPending , setIsPending] = useState(true);
+    const [isNewTaskModalOpen , setNewTaskModalOpen] = useState(false);
 
     // * Fetch data with useEffect
 
@@ -14,7 +15,6 @@ export default function TodoList( ) {
             .then(res => res.json())
             .then(data => {
                 const result = Object.values(data);
-                // console.log(result);
                 setTodos(result);
                 setIsPending(false);
             })
@@ -29,6 +29,29 @@ export default function TodoList( ) {
         setTodos(oldTodos => oldTodos.map(todo => todo._id === todoId ? {...todo, isCompleted: !todo.isCompleted} : todo));
     }
 
+    const handleNewTaskModal = () => {
+        setNewTaskModalOpen(true);
+      };
+
+      const defaultData = {
+        newTask: '',
+        status: 'Incomplete'
+      };
+
+    const [formData , setFormData] = useState(defaultData);
+
+
+      const handleCloseModal = () => {
+        setNewTaskModalOpen(false);
+      };
+    
+      const handleFormSubmit = (data) => {
+        console.log(data);
+        
+        setFormData(data);
+        handleCloseModal();
+      };
+
   
     return (
         <>
@@ -37,11 +60,19 @@ export default function TodoList( ) {
                 {/* <!-- Section container --> */}
                 <section className="todo-list-container">
                     <h1>Todo List</h1>
+                    {/* Add task button */}
 
                     <div className="add-btn-container">
-                        <button className="btn">+ Add new Todo</button>
+                        <button onClick={handleNewTaskModal} className="btn">+ Add new Todo</button>
                     </div>
 
+                    <AddNewTaskModal
+                        isOpen={isNewTaskModalOpen}
+                        modalData={formData}
+                        onSubmit={handleFormSubmit}
+                        onClose={handleCloseModal}
+                    />
+                
                     <div className="table-wrapper">
 
                         {/* <!-- Loading spinner - show the load spinner when fetching the data from the server--> */}
