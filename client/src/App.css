@@ -273,3 +273,58 @@ body {
 .footer p {
   font-size: 1.2rem;
 }
+
+
+/* Modal */
+
+.modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the modal */
+  width: 15%;
+  padding: 1.3em;
+  background: #eee;
+  border: none;
+  border-radius: 8px;
+}
+
+/* Modal Backdrop (Semi-Transparent Background) */
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  backdrop-filter: blur(5px); /* Blurs background */
+}
+
+/* Close Button Styling */
+.modal-close-btn {
+  margin-bottom: 0.7em;
+  background: red;
+  color: white;
+  border: none;
+  padding: 1em 1em;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.modal-close-btn:hover {
+  background: darkred;
+}
+
+.form-now button {
+  margin-top: 0.7em;
+  background: lightblue;
+  color: white;
+  border: none;
+  padding: 1em 1em;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.form-now button:hover {
+  background-color: darkcyan;
+}
+
+.text-field {
+  padding: 0.5em;
+  font-size: 16px;
+}
+
