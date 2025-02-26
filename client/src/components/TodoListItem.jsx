@@ -18,7 +18,7 @@ export default function TodoListItem({
                 <td>{text}</td>
                 <td>{isCompleted ? 'Complete' : 'Incomplete'}</td>
                 <td className="todo-action">
-                    <button  onClick={() => onStatusChange(_id)} className="btn todo-btn">Change status</button>
+                    <button onClick={() => onStatusChange(_id)} className="btn todo-btn">Change status</button>
                 </td>
             </tr>
         </>

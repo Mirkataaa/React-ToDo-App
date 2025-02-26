@@ -3,50 +3,84 @@ import Modal from "./Modal";
 
 export default function AddNewTaskModal({
     onSubmit,
-    modalData,
     isOpen,
     onClose
 }) {
 
     const focusInputRef = useRef(null);
-    const [formData , setFormData] = useState(modalData);
+    const [formData, setFormData] = useState({
+        newTask: '',
+    });
 
+    // * Focus the input field.
     useEffect(() => {
         if (isOpen && focusInputRef.current) {
-          setTimeout(() => {
             focusInputRef.current.focus();
-          }, 0);
         }
-      }, [isOpen]);
+    }, [isOpen]);
 
-      const handleInputChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
-      };
+    };
 
-      const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        onSubmit(formData);
-      };
+        try {
+            const response = await fetch("http://localhost:3030/jsonstore/todos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    text: formData.newTask,
+                    isCompleted: false
+                }),
+            });
 
-      const handleClose = () => {
-        setFormData(modalData);
+            if (!response.ok) {
+                throw new Error("Failed to add task");
+            }
+
+            const newTask = await response.json();
+
+            // ! Notify parent component about the new task
+
+            if (onSubmit) {
+                onSubmit(newTask);
+            };
+
+            setFormData({
+                newTask: '',
+            });
+            onClose();
+        } catch (error) {
+            console.error("Error adding task:", error.message);
+
+        }
+    };
+
+    const handleClose = () => {
+        setFormData({
+            newTask: '',
+        });
         onClose();
-      };
+    };
 
     return (
-       <Modal hasCloseBtn={true} isOpen={isOpen} onClose={handleClose}>
+        <Modal hasCloseBtn={true} isOpen={isOpen} onClose={handleClose}>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="newTask"></label>
-                <input 
+                <input
+                    className="text-field"
+                    ref={focusInputRef}
                     type="text"
                     id="newTask"
                     name="newTask"
-                    value={FormData.newTask}
+                    value={formData.newTask}
                     onChange={handleInputChange}
                     required
                 />
@@ -54,6 +88,6 @@ export default function AddNewTaskModal({
                     <button type="submit">Submit</button>
                 </div>
             </form>
-       </Modal>
+        </Modal>
     );
 }
